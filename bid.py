@@ -1,6 +1,16 @@
-from typing import List
+from typing import List, Dict
 from house import House
 
+class Bid:
+    def __init__(self, item: House, max_investment: float) -> None:
+        self.item: House = item
+        self.max_investment = max_investment
+        self.suggested_price = self.item.min_price
+        self.profit = self.max_investment - self.suggested_price
+    
+    def raise_price(self, how_much: float) -> None:
+        self.suggested_price += how_much
+        self.profit = self.max_investment - self.suggested_price
 
 class Bidder:
     InstanceCount = 0
@@ -9,11 +19,10 @@ class Bidder:
         self.max_invest_per_house = max_invest_per_house
         self.id = Bidder.InstanceCount
         self.name = name if name else f'Bidder #{self.id}'
-        self.profit_per_house: List[float] = []
-        self.targets: List[House] = []
+        self.possible_bids: List[Bid] = []
 
-    def organize_targets(self, houses: List[House]):
-        pass
+    def analyze(self, houses: List[House]):
+        self.possible_bids = [Bid(house, self.max_invest_per_house[i]) for i, house in enumerate(houses)] 
 
     @staticmethod
     def ArrangeBidderInstances(max_invest_per_house_matrix: List[List[float]]):

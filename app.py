@@ -1,5 +1,5 @@
 from house import House
-from bidder import Bidder
+from bid import Bidder
 from typing import List
 
 if __name__ == '__main__':
