@@ -22,7 +22,7 @@ if __name__ == '__main__':
     epsilon = float(input('Epsilon = '))
 
     # preprocess data
-    houses: list[House] = House.ArrangeHouseInstances(r)
+    houses: List[House] = House.ArrangeHouseInstances(r)
     bidders: List[Bidder] = Bidder.ArrangeBidderInstances(V)
 
     # create auction
