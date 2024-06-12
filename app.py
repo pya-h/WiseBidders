@@ -1,6 +1,8 @@
 from house import House
 from bid import Bidder
 from typing import List
+from auction import Auction
+
 
 if __name__ == '__main__':
     # getting inputs
@@ -17,17 +19,11 @@ if __name__ == '__main__':
     print('r = [')
     r = [float(x) for x in input('\t').split()]
     print(']')
-    eps = float(input('Epsilon = '))
+    epsilon = float(input('Epsilon = '))
 
     # preprocess data
     houses: list[House] = House.ArrangeHouseInstances(r)
     bidders: List[Bidder] = Bidder.ArrangeBidderInstances(V)
 
-    for house in houses:
-        print(house.min_price, end='\t')
-
-    print()
-
-    for bidder in bidders:
-        print(bidder.max_invest_per_house, end='\t')
-
+    # create auction
+    auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon)
