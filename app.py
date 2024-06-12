@@ -27,3 +27,4 @@ if __name__ == '__main__':
 
     # create auction
     auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon)
+    auction.start()
