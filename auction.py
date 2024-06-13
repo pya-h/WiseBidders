@@ -1,7 +1,7 @@
 from house import House
 from bid import Bidder, Bid
 from typing import List, Dict
-
+from random import randint
 
 class Auction:
 
@@ -17,6 +17,7 @@ class Auction:
 
         for bidder in self.bidders:
             bids_per_bidder[bidder] = self.analyze(bidder)
+            Auction.randomize_first_bid_by_profit_if_needed(bids_per_bidder[bidder])
 
         bids_per_item: Dict[House, List[Bid]] = {}
 
@@ -26,11 +27,9 @@ class Auction:
                     bids_per_item[bid.item] = []
                 bids_per_item[bid.item].append(bid)
 
-        # do first bid for all items
+        # # do first bid for all items
         for item in bids_per_item:
-            bids_per_item[item] = self.accept_best_bid(bids_per_item[item], creterion=lambda bid: bid.profit)
-
-        self.declare_winners()
+            bids_per_item[item] = self.accept_best_bid(bids_per_item[item], creterion=lambda bid: bid.profit, randomize_if_needed=False)
 
         # start raising, comapring and re-analyzing and etc.
         round: int = 2
@@ -59,6 +58,8 @@ class Auction:
                         bids_per_item[bid.item].append(bid)
                     else:
                         del bids_per_bidder[bidder][0]
+                        if bids_per_bidder[bidder][0]:
+                            Auction.randomize_first_bid_by_profit_if_needed(bids_per_bidder[bidder])
 
             for item in bids_per_item:
                 print("\tBid on", item, ":")
@@ -77,11 +78,41 @@ class Auction:
         for item in self.items:
             print(item, "Sold to", item.sold_to, "@ ", item.best_bid.suggested_price if item.best_bid and item.sold_to else None)
 
-    def accept_best_bid(self, item_bids: List[Bid], creterion = lambda bid: bid.suggested_price) -> List[Bid]:
+    def accept_best_bid(self, item_bids: List[Bid], creterion = lambda bid: bid.suggested_price, randomize_if_needed: bool = True) -> List[Bid]:
         item_bids = sorted(item_bids, key=creterion, reverse=True)
-        item_bids[0].temp_win()
+        if randomize_if_needed:
+            Auction.randomize_first_bid_by_price_if_needed(item_bids)
+        if item_bids:
+            item_bids[0].temp_win()
         return item_bids
-    
+
+    @staticmethod
+    def randomize_first_bid_by_price_if_needed(bids: List[Bid]):
+        if len(bids) <= 1:
+            return
+        i, end = 1, len(bids)
+        while i < end and (bids[0].suggested_price == bids[i].suggested_price):
+            i += 1
+        if i > 1:
+            choice = randint(0, i - 1)
+            temp = bids[0]
+            bids[0] = bids[choice]
+            bids[choice] = temp
+
+    @staticmethod
+    def randomize_first_bid_by_profit_if_needed(bids: List[Bid]):
+        if len(bids) <= 1:
+            return
+        i, end = 1, len(bids)
+        while i < end and (bids[0].profit == bids[i].profit):
+            i += 1
+        if i > 1:
+            choice = randint(0, i - 1)
+            temp = bids[0]
+            bids[0] = bids[choice]
+            bids[choice] = temp
+
+
     def declare_winners(self):
         for item in self.items:
             if item.best_bid is not None:

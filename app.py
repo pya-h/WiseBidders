@@ -20,7 +20,8 @@ def get_user_inputs():
     r = [float(x) for x in input('\t').split()]
     print(']')
     epsilon = float(input('Epsilon = '))
-    return number_of_houses, number_of_bidders, V, r, epsilon
+    rounds_limit = int(input('Round Limit [default: 1000] = ') or 1000)
+    return number_of_houses, number_of_bidders, V, r, epsilon, rounds_limit
 
 def get_test_input():
     V = [ [20, 30, 50],
@@ -31,16 +32,16 @@ def get_test_input():
     r = [20, 10, 15,]
     epsilon = 1
 
-    return None, None, V, r, epsilon
+    return None, None, V, r, epsilon, 100
 
 
 if __name__ == '__main__':
-    number_of_houses, number_of_bidders, V, r, epsilon = get_test_input()  # Todo: get_user_inputs()
+    number_of_houses, number_of_bidders, V, r, epsilon, rounds_limit = get_user_inputs()
     # preprocess data
     houses: List[House] = House.ArrangeHouseInstances(r)
     bidders: List[Bidder] = Bidder.ArrangeBidderInstances(V)
 
     # create auction
-    auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon, rounds_limit=100)
+    auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon, rounds_limit=rounds_limit)
     auction.start()
     input()
