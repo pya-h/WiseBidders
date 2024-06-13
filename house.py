@@ -19,3 +19,6 @@ class House:
     @property
     def is_sold(self):
         return self.sold_to is not None
+    
+    def __str__(self) -> str:
+        return self.name

@@ -36,24 +36,30 @@ class Bidder:
     def unlock(self):
         self.allowed_to_bid = True
 
+    def __str__(self) -> str:
+        return self.name
 
 
 class Bid:
     def __init__(self, item: House, bidder: Bidder, max_investment: float) -> None:
         self.item: House = item
+        self.suggested_price = 0
         self.max_investment = max_investment
-        self.suggested_price = self.item.min_price
-        self.profit = self.max_investment - self.suggested_price
         self.bidder: Bidder = bidder
         self.lose_count: int = 0
         self.failed: bool = False
+        self.raise_price(self.item.min_price)
 
-    def raise_price(self, how_much: float) -> None:
-        self.suggested_price += how_much
+    def raise_price(self, new_suggestion: float) -> None:
+        self.suggested_price = new_suggestion
         self.profit = self.max_investment - self.suggested_price
+        self.lose_count = 0
         if self.profit < 0:
             self.failed = True
-            
+    
+    def can_raise(self, new_price: float):
+        return new_price <= self.max_investment
+           
     def win(self):
         self.item.sold_to = self.bidder
         self.bidder.purchased = self.item
@@ -68,3 +74,6 @@ class Bid:
         self.lose_count += 1
         if self.lose_count >= 2:
             self.failed = True
+
+    def __str__(self) -> str:
+        return f'On {self.item}: {self.suggested_price} by {self.bidder}'

@@ -4,7 +4,7 @@ from typing import List
 from auction import Auction
 
 
-if __name__ == '__main__':
+def get_user_inputs():
     # getting inputs
     number_of_houses = int(input('n = '))
     number_of_bidders = int(input('m = '))
@@ -20,11 +20,27 @@ if __name__ == '__main__':
     r = [float(x) for x in input('\t').split()]
     print(']')
     epsilon = float(input('Epsilon = '))
+    return number_of_houses, number_of_bidders, V, r, epsilon
 
+def get_test_input():
+    V = [ [20, 30, 50],
+         [10, 50, 40,],
+         [30, 10, 90,],
+    ]
+
+    r = [20, 10, 15,]
+    epsilon = 1
+
+    return None, None, V, r, epsilon
+
+
+if __name__ == '__main__':
+    number_of_houses, number_of_bidders, V, r, epsilon = get_test_input()  # Todo: get_user_inputs()
     # preprocess data
     houses: List[House] = House.ArrangeHouseInstances(r)
     bidders: List[Bidder] = Bidder.ArrangeBidderInstances(V)
 
     # create auction
-    auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon)
+    auction = Auction(items=houses, bidders=bidders, min_raise_amount=epsilon, rounds_limit=100)
     auction.start()
+    input()
