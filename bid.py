@@ -51,7 +51,9 @@ class Bid:
     def raise_price(self, how_much: float) -> None:
         self.suggested_price += how_much
         self.profit = self.max_investment - self.suggested_price
-
+        if self.profit < 0:
+            self.failed = True
+            
     def win(self):
         self.item.sold_to = self.bidder
         self.bidder.purchased = self.item
