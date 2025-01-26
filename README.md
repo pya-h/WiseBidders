@@ -2,4 +2,4 @@
 <hr />
 <h2> Python </h2>
 <hr />
-<p>This is a simulation of an auction, with its specific rules. Rules are all stated in docs </p>
+<p>Simulation of an auction, with its specific rules. Rules are all stated in docs </p>
